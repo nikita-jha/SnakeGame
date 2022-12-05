@@ -19,6 +19,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.util.Duration;
+import javafx.scene.image.Image;
+
 
 /**
  * This is the app class for the Snake Game. The snake is controlled by left, right, up, down keys.
@@ -31,7 +33,9 @@ public class OmegaApp extends  Application {
     private Group root;
     private Canvas canvas;
     private GraphicsContext gc;
+    private Image foodPicture;
 
+    private int score = 0;
     private Point head;
     private List<Point> body = new LinkedList<>();
     private int snakeDirection;
@@ -40,6 +44,8 @@ public class OmegaApp extends  Application {
     private final int columns = 15;
     private final int rows = 15;
     private final int squareDim = height / columns;
+    private int xCoord;
+    private int yCoord;
 
     /**
      * This is the constructor for the OmegaApp class that initializes variables for Snake game.
@@ -70,6 +76,7 @@ public class OmegaApp extends  Application {
         this.stage.show();
 
         scene1.setOnKeyPressed(e -> handle(e));
+        createFood();
 
         EventHandler<ActionEvent> handler = event -> {
             try {
@@ -124,8 +131,10 @@ public class OmegaApp extends  Application {
                         squareDim);
             }
         }
+        populateFood(gc);
         populateSnake(gc);
         moveSnake();
+        eatFood();
 
         if (snakeDirection == 0) {
             head.setY(head.getY() - 1);
@@ -192,5 +201,42 @@ public class OmegaApp extends  Application {
                     22);
         }
 
+    }
+
+    /**
+     * Generates random grid box for food and sets foodPicture to be
+     * apple image.
+     */
+    private void createFood() {
+        xCoord = (int)(Math.random() * rows);
+        yCoord = (int)(Math.random() * columns);
+        foodPicture = new Image("file:resources/apple.png");
+    }
+
+    /**
+     * Draws the food image on the grid.
+     * @param gc
+     */
+    private void populateFood (GraphicsContext gc) {
+        int xLocation = xCoord * squareDim;
+        int yLocation = yCoord * squareDim;
+
+        gc.drawImage(foodPicture,
+                xLocation,
+                yLocation,
+                squareDim,
+                squareDim);
+    }
+
+    /**
+     * Adds a segment to snake everytime it eats an apple. Updates score.
+     * Calls {@code createFood()} to generate next random grid box for food.
+     */
+    private void eatFood() {
+        if (head.getX() == xCoord && head.getY() == yCoord) {
+            body.add(new Point(-1, -1));
+            this.score += 5;
+            createFood();
+        }
     }
 }
