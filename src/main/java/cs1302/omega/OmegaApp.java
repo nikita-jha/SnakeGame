@@ -99,7 +99,7 @@ public class OmegaApp extends  Application {
         button2.setStyle("-fx-font-size:25");
         button2.setOnAction(e -> {
             try {
-                System.out.println("Restart!");
+                restart();
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -157,6 +157,15 @@ public class OmegaApp extends  Application {
         this.scoreLabel.setText("Score: " + this.score);
         stage.setScene(scene2);
         stage.show();
+    }
+
+    /**
+     * Restarts game if user clicks restart button.
+     * @throws Exception
+     */
+    public void restart() throws Exception {
+        stage.close();
+        new OmegaApp().start(new Stage());
     }
 
     /**
