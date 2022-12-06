@@ -3,7 +3,6 @@ package cs1302.omega;
 import javafx.event.ActionEvent;
 import java.util.LinkedList;
 import java.util.List;
-
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -21,7 +20,17 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
-
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 /**
  * This is the app class for the Snake Game. The snake is controlled by left, right, up, down keys.
@@ -29,12 +38,15 @@ import javafx.scene.image.Image;
 public class OmegaApp extends  Application {
 
     private Scene scene1;
+    private Scene scene2;
     private Stage stage;
+    private Label scoreLabel;
     private Timeline timeline;
     private Group root;
     private Canvas canvas;
     private GraphicsContext gc;
     private Image foodPicture;
+    private boolean isGameOver;
 
     private int score = 0;
     private Point head;
@@ -76,6 +88,31 @@ public class OmegaApp extends  Application {
         this.stage.setScene(scene1);
         this.stage.show();
 
+        //Scene 2
+        Label label2 = new Label("Game Over!");
+        label2.setFont(new Font("Lucida Sans Unicode", 70));
+        label2.setTextFill(Color.RED);
+        scoreLabel = new Label();
+        scoreLabel.setFont(new Font("Lucida Sans Unicode", 45));
+        Button button2 = new Button("Restart");
+        button2.setMinSize(200, 75);
+        button2.setStyle("-fx-font-size:25");
+        button2.setOnAction(e -> {
+            try {
+                System.out.println("Restart!");
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+        VBox layout2 = new VBox(20);
+        layout2.setAlignment(Pos.CENTER);
+        layout2.getChildren().addAll(label2, this.scoreLabel, button2);
+        layout2.setBackground(new Background(
+                new BackgroundFill(Color.web("a8d949"),
+                        CornerRadii.EMPTY,
+                        Insets.EMPTY)));
+        scene2 = new Scene(layout2, width, height);
+
         scene1.setOnKeyPressed(e -> handle(e));
         createFood();
 
@@ -113,11 +150,25 @@ public class OmegaApp extends  Application {
     }
 
     /**
+     * Sets a new scene to show the Game Over screen.
+     */
+    public void onGameOver() {
+        timeline.stop();
+        this.scoreLabel.setText("Score: " + this.score);
+        stage.setScene(scene2);
+        stage.show();
+    }
+
+    /**
      * Performs all main operations for game including setting up background, snake, food,
      * and performing all game operations like moving the snake and eating the food.
      * @param gc
      */
     private void play(GraphicsContext gc) {
+        if (isGameOver) {
+            onGameOver();
+            return;
+        }
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 boolean isEven = (i + j) % 2 == 0;
@@ -136,7 +187,6 @@ public class OmegaApp extends  Application {
         populateSnake(gc);
         scoreGame();
         moveSnake();
-        eatFood();
 
         if (snakeDirection == 0) {
             head.setY(head.getY() - 1);
@@ -147,6 +197,8 @@ public class OmegaApp extends  Application {
         } else if (snakeDirection == 3) {
             head.setX(head.getX() + 1);
         }
+        eatFood();
+        isGameOver();
     }
 
     /**
@@ -250,5 +302,24 @@ public class OmegaApp extends  Application {
         Font font = new Font("Lucida Sans Unicode", 30);
         gc.setFont(font);
         gc.fillText("Score: " + score, 15, 30);
+    }
+
+    /**
+     * Checks snake game to see if game over.
+     */
+    public void isGameOver() {
+        if (head.getX() < 0 || head.getY() < 0 || head.getX() * squareDim == width
+                || head.getY() * squareDim == height) {
+            isGameOver = true;
+        }
+
+        //destroy itself
+        for (int i = 1; i < body.size(); i++) {
+            if (head.getX() == body.get(i).getX()
+                    && head.getY() == body.get(i).getY()) {
+                isGameOver = true;
+                break;
+            }
+        }
     }
 }
