@@ -8,6 +8,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.animation.Animation;
 import javafx.application.Application;
@@ -133,6 +134,7 @@ public class OmegaApp extends  Application {
         }
         populateFood(gc);
         populateSnake(gc);
+        scoreGame();
         moveSnake();
         eatFood();
 
@@ -238,5 +240,15 @@ public class OmegaApp extends  Application {
             this.score += 5;
             createFood();
         }
+    }
+
+    /**
+     * Draws the score board on the game's main screen.
+     */
+    private void scoreGame() {
+        gc.setFill(Color.WHITE);
+        Font font = new Font("Lucida Sans Unicode", 30);
+        gc.setFont(font);
+        gc.fillText("Score: " + score, 15, 30);
     }
 }

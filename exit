@@ -1,0 +1,47 @@
+* [33m1694fa0[m[33m ([m[1;32mtesting[m[33m)[m Created food image and snake's eating functionality
+* [33m65c2ca8[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Added moving snake controlled by keyboard
+* [33m1b95e9e[m Created colored background grid
+* [33mcd0bd18[m[33m ([m[1;31mstarter/main[m[33m)[m Update README.rst
+* [33m7e5587b[m Update README.rst
+* [33m6fdaf6d[m Update README.rst
+* [33m1dd767f[m Update README.rst
+* [33m3546653[m Update DEADLINE.md
+* [33m8e2cc10[m Update README.rst
+* [33m8d7d4e7[m Update README.rst
+* [33m9acf11a[m Update README.rst
+* [33mc2af7fe[m Update README.rst
+* [33mdf24187[m Update README.rst
+* [33m42285a6[m Update README.rst
+* [33mfc30625[m Update README.rst
+* [33me0e9d57[m Update README.rst
+* [33m7647f6d[m Update README.rst
+* [33m4995e84[m minor readme update
+* [33m861ff85[m minor readme update
+* [33me4f78f3[m update API appendix
+* [33mfd7137e[m minor readme update
+* [33me9bed5e[m update version numbers
+* [33m1a4fc77[m update version numbers
+* [33mcf65eed[m minor readme update
+* [33m3ce19ca[m updated open library example
+* [33m44bd255[m deprecate tools
+* [33m35915b5[m update dependencies
+* [33m1a03487[m Update README.rst
+* [33m240b1f3[m quick update
+* [33mac1834a[m Update README.rst
+* [33macc76e4[m Update README.rst
+* [33m04f8805[m Update module-info.java
+* [33md6ef121[m Add `javafx-xml`and `javafx-web` to `pom.xml`.
+* [33mef9ad6e[m Update module-info.java
+* [33m5f0aa22[m Update APPENDIX_API.rst
+* [33m16dd97f[m Update README.rst
+* [33m6532c26[m Update README.rst
+* [33mf7e44a4[m Update README.rst
+* [33m64075cc[m Update README.rst
+* [33me93cf72[m Update README.rst
+* [33mb943f97[m Update README.rst
+* [33md3de160[m executing `git push -u origin main` again. annotated Tools.getJson with @SafeVarargs
+* [33m93266a7[m added overload for getJson to accomodate requests with headers
+* [33ma51b177[m Update README.rst
+* [33m39e9732[m Update README.rst
+* [33md241bbf[m Update README.rst
+* [33m50a0708[m initial commit
