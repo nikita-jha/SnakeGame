@@ -151,7 +151,6 @@ public class OmegaApp extends  Application {
     /**
      * Performs all main operations for game including setting up background, snake, food,
      * and performing all game operations like moving the snake and eating the food.
-     * @param gc
      */
     public void play() {
         if (isGameOver) {
@@ -267,7 +266,6 @@ public class OmegaApp extends  Application {
 
     /**
      * Draws the snake on the grid.
-     * @param gc
      */
     public void populateSnake() {
         Paint snakeColor = Color.web("4c7cfc");
