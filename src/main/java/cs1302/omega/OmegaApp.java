@@ -91,7 +91,7 @@ public class OmegaApp extends  Application {
         //Scene 2
         Label label2 = new Label("Game Over!");
         label2.setFont(new Font("Lucida Sans Unicode", 70));
-        label2.setTextFill(Color.RED);
+        label2.setTextFill(Color.web("4c7cfc"));
         scoreLabel = new Label();
         scoreLabel.setFont(new Font("Lucida Sans Unicode", 45));
         Button button2 = new Button("Restart");
@@ -108,45 +108,25 @@ public class OmegaApp extends  Application {
         layout2.setAlignment(Pos.CENTER);
         layout2.getChildren().addAll(label2, this.scoreLabel, button2);
         layout2.setBackground(new Background(
-                new BackgroundFill(Color.web("a8d949"),
+                new BackgroundFill(Color.web("f5e5dc"),
                         CornerRadii.EMPTY,
                         Insets.EMPTY)));
         scene2 = new Scene(layout2, width, height);
 
+        //Scene 1 Key Press
         scene1.setOnKeyPressed(e -> handle(e));
         createFood();
 
         EventHandler<ActionEvent> handler = event -> {
             try {
-                play(gc);
+                play();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         };
-        timeline = new Timeline(new KeyFrame(Duration.millis(150), handler));
+        timeline = new Timeline(new KeyFrame(Duration.millis(135), handler));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
-    }
-
-    /**
-     * Controls keyboard input for moving the snake in various directions.
-     * @param keyEvent
-     */
-
-    public void handle(KeyEvent keyEvent) {
-        int up = 0;
-        int down = 1;
-        int left = 2;
-        int right = 3;
-        if (keyEvent.getCode() == KeyCode.RIGHT && snakeDirection != left) {
-            snakeDirection = right;
-        } else if (keyEvent.getCode() == KeyCode.LEFT && snakeDirection != right) {
-            snakeDirection = left;
-        } else if (keyEvent.getCode() == KeyCode.UP && snakeDirection != down) {
-            snakeDirection = up;
-        } else if (keyEvent.getCode() == KeyCode.DOWN && snakeDirection != up) {
-            snakeDirection = down;
-        }
     }
 
     /**
@@ -173,18 +153,19 @@ public class OmegaApp extends  Application {
      * and performing all game operations like moving the snake and eating the food.
      * @param gc
      */
-    private void play(GraphicsContext gc) {
+    public void play() {
         if (isGameOver) {
             onGameOver();
             return;
         }
+        //Use row, column indices to create background grid
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                boolean isEven = (i + j) % 2 == 0;
+                boolean isEven = Math.abs(j - i) % 2 == 0;
                 if (isEven) {
-                    gc.setFill(Color.web("8fcd39"));
+                    gc.setFill(Color.web("f5e5dc"));
                 } else {
-                    gc.setFill(Color.web("a8d949"));
+                    gc.setFill(Color.web("ebd7cc"));
                 }
                 gc.fillRect(squareDim * i,
                         squareDim * j,
@@ -192,28 +173,67 @@ public class OmegaApp extends  Application {
                         squareDim);
             }
         }
-        populateFood(gc);
-        populateSnake(gc);
-        scoreGame();
+
+        //Shows apple in grid
+        int xLocation = xCoord * squareDim;
+        int yLocation = yCoord * squareDim;
+
+        gc.drawImage(foodPicture,
+                xLocation,
+                yLocation,
+                squareDim,
+                squareDim);
+
+        populateSnake();
+
+        //Shows score board
+        gc.setFill(Color.BLACK);
+        Font font = new Font("Lucida Sans Unicode", 30);
+        gc.setFont(font);
+        gc.fillText("SCORE: " + score, 15, 590);
+
         moveSnake();
 
-        if (snakeDirection == 0) {
-            head.setY(head.getY() - 1);
-        } else if (snakeDirection == 1) {
-            head.setY(head.getY() + 1);
-        } else if (snakeDirection == 2) {
-            head.setX(head.getX() - 1);
-        } else if (snakeDirection == 3) {
-            head.setX(head.getX() + 1);
+        //Score gets updated, new segment gets added, and food gets created
+        //everytime the snake eats more food.
+        if (head.getX() == xCoord && head.getY() == yCoord) {
+            Point pointNew = new Point(-1, -1);
+            body.add(pointNew);
+            score = score + 1;
+            createFood();
         }
-        eatFood();
+
         isGameOver();
     }
 
     /**
+     * Controls keyboard input for moving the snake in various directions.
+     * @param keyEvent
+     */
+
+    public void handle(KeyEvent keyEvent) {
+        //Uses keyboard input to control snake movement
+        int up = 0;
+        int down = 1;
+        int left = 2;
+        int right = 3;
+        if (keyEvent.getCode() == KeyCode.RIGHT && snakeDirection != left) {
+            snakeDirection = right;
+        } else if (keyEvent.getCode() == KeyCode.LEFT && snakeDirection != right) {
+            snakeDirection = left;
+        } else if (keyEvent.getCode() == KeyCode.UP && snakeDirection != down) {
+            snakeDirection = up;
+        } else if (keyEvent.getCode() == KeyCode.DOWN && snakeDirection != up) {
+            snakeDirection = down;
+        }
+    }
+
+
+    /**
      *  Creates the snake using Point class objects.
      */
-    private void initializeSnake() {
+    public void initializeSnake() {
+        //Add two points to initial snake
         Point point1 = new Point(10, 10);
         Point point2 = new Point(10, 10);
 
@@ -226,19 +246,30 @@ public class OmegaApp extends  Application {
     /**
      * Mimics snake movement by shifting each block up by one.
      */
-    private void moveSnake() {
+    public void moveSnake() {
+        //Mimics snake movement based on keyboard input
         for (int i = body.size() - 1; i >= 1; i--) {
             body.get(i).setX(body.get(i - 1).getX());
             body.get(i).setY(body.get(i - 1).getY());
 
         }
+        if (snakeDirection == 0) {
+            head.setY(head.getY() - 1);
+        } else if (snakeDirection == 1) {
+            head.setY(head.getY() + 1);
+        } else if (snakeDirection == 2) {
+            head.setX(head.getX() - 1);
+        } else if (snakeDirection == 3) {
+            head.setX(head.getX() + 1);
+        }
+
     }
 
     /**
      * Draws the snake on the grid.
      * @param gc
      */
-    private void populateSnake(GraphicsContext gc) {
+    public void populateSnake() {
         Paint snakeColor = Color.web("4c7cfc");
         gc.setFill(snakeColor);
 
@@ -247,10 +278,10 @@ public class OmegaApp extends  Application {
         int yLocationHead = head.getY() * squareDim;
         gc.fillRoundRect(xLocationHead,
                 yLocationHead,
-                squareDim - 2,
-                squareDim - 2,
-                45,
-                45);
+                squareDim,
+                squareDim,
+                15,
+                15);
 
         //Fill rest of body
         for (int i = 1; i < body.size(); i++) {
@@ -258,10 +289,10 @@ public class OmegaApp extends  Application {
             int yLocationBody = body.get(i).getY() * squareDim;
             gc.fillRoundRect(xLocationBody,
                     yLocationBody,
-                    squareDim - 1,
-                    squareDim - 1,
-                    22,
-                    22);
+                    squareDim,
+                    squareDim,
+                    15,
+                    15);
         }
 
     }
@@ -270,59 +301,18 @@ public class OmegaApp extends  Application {
      * Generates random grid box for food and sets foodPicture to be
      * apple image.
      */
-    private void createFood() {
+    public void createFood() {
+        //Generate random row and column for food placement
         xCoord = (int)(Math.random() * rows);
         yCoord = (int)(Math.random() * columns);
         foodPicture = new Image("file:resources/apple.png");
     }
 
     /**
-     * Draws the food image on the grid.
-     * @param gc
-     */
-    private void populateFood (GraphicsContext gc) {
-        int xLocation = xCoord * squareDim;
-        int yLocation = yCoord * squareDim;
-
-        gc.drawImage(foodPicture,
-                xLocation,
-                yLocation,
-                squareDim,
-                squareDim);
-    }
-
-    /**
-     * Adds a segment to snake everytime it eats an apple. Updates score.
-     * Calls {@code createFood()} to generate next random grid box for food.
-     */
-    private void eatFood() {
-        if (head.getX() == xCoord && head.getY() == yCoord) {
-            body.add(new Point(-1, -1));
-            this.score += 5;
-            createFood();
-        }
-    }
-
-    /**
-     * Draws the score board on the game's main screen.
-     */
-    private void scoreGame() {
-        gc.setFill(Color.WHITE);
-        Font font = new Font("Lucida Sans Unicode", 30);
-        gc.setFont(font);
-        gc.fillText("Score: " + score, 15, 30);
-    }
-
-    /**
      * Checks snake game to see if game over.
      */
     public void isGameOver() {
-        if (head.getX() < 0 || head.getY() < 0 || head.getX() * squareDim == width
-                || head.getY() * squareDim == height) {
-            isGameOver = true;
-        }
-
-        //destroy itself
+        //Destroy itself
         for (int i = 1; i < body.size(); i++) {
             if (head.getX() == body.get(i).getX()
                     && head.getY() == body.get(i).getY()) {
@@ -330,5 +320,13 @@ public class OmegaApp extends  Application {
                 break;
             }
         }
+
+        //Bump into walls
+        if (head.getX() * squareDim == width
+                || head.getY() * squareDim == height
+                || head.getX() < 0 || head.getY() < 0) {
+            isGameOver = true;
+        }
+
     }
 }
