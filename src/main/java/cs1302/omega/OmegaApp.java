@@ -312,10 +312,11 @@ public class OmegaApp extends  Application {
     public void isGameOver() {
         //Destroy itself
         for (int i = 1; i < body.size(); i++) {
-            if (head.getX() == body.get(i).getX()
-                    && head.getY() == body.get(i).getY()) {
-                isGameOver = true;
-                break;
+            if (head.getX() == body.get(i).getX()) {
+                if (head.getY() == body.get(i).getY()) {
+                    isGameOver = true;
+                    break;
+                }
             }
         }
 
