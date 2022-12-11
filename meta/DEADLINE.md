@@ -15,7 +15,7 @@ Markdown is transformed into nice looking HTML.
 
 This app falls under the arcade game category of the project. It is similar
 to the Snake arcade game in which users can use the keyboard arrow keys
-to help a snake eat apples. Each time the snake eats an apple, 5 points is
+to help a snake eat apples. Each time the snake eats an apple, 1  points is
 added to the user's score. The game is over if the snake bumps into itself
 or one of the walls.
 
